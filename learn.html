@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수어 배우기 🤟</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body class="learn-page">
+
+  <!-- Confetti canvas (success animation) -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- ===== Header ===== -->
+  <header class="learn-header">
+    <a href="index.html" class="back-btn">← 돌아가기</a>
+    <div class="learn-word-badge">
+      <span id="hdr-emoji">👋</span>
+      <span id="hdr-kr">안녕</span>
+      <span id="hdr-en">Hello</span>
+    </div>
+  </header>
+
+  <!-- ===== Main layout ===== -->
+  <main class="learn-main">
+
+    <!-- Left: How-to panel -->
+    <section class="panel howto-panel">
+      <h2 class="panel-title">📖 이렇게 해봐요!</h2>
+
+      <!-- Reference display -->
+      <div class="ref-display" id="ref-display">
+        <div class="ref-emoji" id="ref-emoji">👋</div>
+        <div class="ref-kr" id="ref-kr">안녕</div>
+        <div class="ref-en" id="ref-en">Hello</div>
+      </div>
+
+      <!-- Steps -->
+      <ul class="steps-list" id="steps-list" aria-label="따라하기 순서"></ul>
+    </section>
+
+    <!-- Right: Webcam panel -->
+    <section class="panel webcam-panel">
+      <h2 class="panel-title">📷 내 손 보기</h2>
+
+      <div class="webcam-wrap" id="webcam-wrap">
+        <video id="webcam-video" autoplay playsinline muted></video>
+        <canvas id="capture-canvas" hidden></canvas>
+
+        <!-- Shown when camera is off -->
+        <div class="cam-placeholder" id="cam-placeholder">
+          <span class="ph-emoji" aria-hidden="true">📸</span>
+          <p>카메라를 켜면<br>여기에 내 모습이 보여요!</p>
+        </div>
+
+        <!-- Red recording dot -->
+        <div class="rec-dot" id="rec-dot" hidden aria-hidden="true"></div>
+      </div>
+
+      <button class="cam-btn cam-start" id="cam-btn" onclick="toggleCamera()">
+        <span aria-hidden="true">📷</span> 카메라 켜기
+      </button>
+      <p class="cam-tip">카메라를 켜고 손 모양을 따라해 보세요!</p>
+    </section>
+
+    <!-- Bottom: Feedback panel (spans both columns) -->
+    <section class="panel feedback-panel" id="feedback-panel" aria-live="polite">
+
+      <!-- State: idle -->
+      <div class="fb fb-idle" id="fb-idle">
+        <span class="fb-icon" aria-hidden="true">✋</span>
+        <p>카메라를 켜고 수어를 따라해 보세요!</p>
+      </div>
+
+      <!-- State: trying -->
+      <div class="fb fb-trying" id="fb-trying" hidden>
+        <span class="fb-icon" aria-hidden="true">💪</span>
+        <p id="fb-msg">열심히 하고 있어요!</p>
+        <div class="conf-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="conf-bar-wrap">
+          <div class="conf-bar" id="conf-bar"></div>
+        </div>
+      </div>
+
+      <!-- State: success -->
+      <div class="fb fb-success" id="fb-success" hidden>
+        <span class="fb-icon celebrate-pop" aria-hidden="true">🎉</span>
+        <p class="success-msg">완벽해요! 대단해요! 🌟</p>
+        <button class="retry-btn" onclick="resetSession()">다시 해볼까요? 🔄</button>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="js/learn.js"></script>
+</body>
+</html>
