@@ -11,6 +11,11 @@
 </head>
 <body class="learn-page">
 
+  <!-- 홈과 동일한 배경 블롭 -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
   <!-- Confetti canvas (success animation) -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
@@ -50,12 +55,6 @@
         <video id="webcam-video" autoplay playsinline muted></video>
         <canvas id="capture-canvas" hidden></canvas>
 
-        <!-- Shown when camera is off -->
-        <div class="cam-placeholder" id="cam-placeholder">
-          <span class="ph-emoji" aria-hidden="true">📸</span>
-          <p>카메라를 켜면<br>여기에 내 모습이 보여요!</p>
-        </div>
-
         <!-- Red recording dot -->
         <div class="rec-dot" id="rec-dot" hidden aria-hidden="true"></div>
       </div>
@@ -66,32 +65,6 @@
       <p class="cam-tip">카메라를 켜고 손 모양을 따라해 보세요!</p>
     </section>
 
-    <!-- Bottom: Feedback panel (spans both columns) -->
-    <section class="panel feedback-panel" id="feedback-panel" aria-live="polite">
-
-      <!-- State: idle -->
-      <div class="fb fb-idle" id="fb-idle">
-        <span class="fb-icon" aria-hidden="true">✋</span>
-        <p>카메라를 켜고 수어를 따라해 보세요!</p>
-      </div>
-
-      <!-- State: trying -->
-      <div class="fb fb-trying" id="fb-trying" hidden>
-        <span class="fb-icon" aria-hidden="true">💪</span>
-        <p id="fb-msg">열심히 하고 있어요!</p>
-        <div class="conf-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="conf-bar-wrap">
-          <div class="conf-bar" id="conf-bar"></div>
-        </div>
-      </div>
-
-      <!-- State: success -->
-      <div class="fb fb-success" id="fb-success" hidden>
-        <span class="fb-icon celebrate-pop" aria-hidden="true">🎉</span>
-        <p class="success-msg">완벽해요! 대단해요! 🌟</p>
-        <button class="retry-btn" onclick="resetSession()">다시 해볼까요? 🔄</button>
-      </div>
-
-    </section>
   </main>
 
   <script src="js/learn.js"></script>

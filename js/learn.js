@@ -67,8 +67,7 @@ let consecOk  = 0;
 /* =============================================
    DOM 참조
    ============================================= */
-let $video, $canvas, $ctx, $recDot, $camBtn, $placeholder;
-let $fbIdle, $fbTrying, $fbSuccess, $fbMsg, $confBar, $confBarWrap;
+let $video, $canvas, $ctx, $recDot, $camBtn;
 let $confettiCanvas;
 
 /* =============================================
@@ -109,18 +108,11 @@ function init() {
   });
 
   // DOM 참조 캐시
-  $video        = document.getElementById('webcam-video');
-  $canvas       = document.getElementById('capture-canvas');
-  $ctx          = $canvas.getContext('2d');
-  $recDot       = document.getElementById('rec-dot');
-  $camBtn       = document.getElementById('cam-btn');
-  $placeholder  = document.getElementById('cam-placeholder');
-  $fbIdle       = document.getElementById('fb-idle');
-  $fbTrying     = document.getElementById('fb-trying');
-  $fbSuccess    = document.getElementById('fb-success');
-  $fbMsg        = document.getElementById('fb-msg');
-  $confBar      = document.getElementById('conf-bar');
-  $confBarWrap  = document.getElementById('conf-bar-wrap');
+  $video          = document.getElementById('webcam-video');
+  $canvas         = document.getElementById('capture-canvas');
+  $ctx            = $canvas.getContext('2d');
+  $recDot         = document.getElementById('rec-dot');
+  $camBtn         = document.getElementById('cam-btn');
   $confettiCanvas = document.getElementById('confetti-canvas');
 }
 
@@ -143,13 +135,11 @@ async function startCamera() {
     });
     $video.srcObject = stream;
     $video.removeAttribute('hidden');
-    $placeholder.hidden = true;
     $recDot.hidden = false;
 
     $camBtn.className = 'cam-btn cam-stop';
     $camBtn.innerHTML = '<span>⏹️</span> 카메라 끄기';
 
-    showState('trying');
     startPredicting();
   } catch {
     alert('카메라를 사용할 수 없어요 😢\n카메라 접근 권한을 확인해 주세요!');
@@ -162,16 +152,13 @@ function stopCamera() {
 
   $video.srcObject = null;
   $video.hidden = true;
-  $placeholder.hidden = false;
   $recDot.hidden = true;
 
   $camBtn.className = 'cam-btn cam-start';
   $camBtn.innerHTML = '<span>📷</span> 카메라 켜기';
 
   stopPredicting();
-  showState('idle');
   consecOk = 0;
-  setBar(0);
 }
 
 /* =============================================
@@ -225,29 +212,14 @@ async function callAPI(imageB64) {
    결과 처리
    ============================================= */
 function handleResult({ label, confidence = 0 }) {
-  const pct = Math.min(100, Math.round(confidence * 100));
-  setBar(pct);
-
   const correct = label === wordKey && confidence >= SUCCESS_THRESHOLD;
 
   if (correct) {
     consecOk++;
-    $fbMsg.textContent = consecOk >= REQUIRED_SUCCESSES - 1
-      ? '조금만 더! 거의 다 됐어요! 💪'
-      : '잘하고 있어요! 🌟';
-
-    if (consecOk >= REQUIRED_SUCCESSES) {
-      onSuccess();
-    }
+    if (consecOk >= REQUIRED_SUCCESSES) onSuccess();
   } else {
     consecOk = 0;
-    $fbMsg.textContent = '손 모양을 잘 보고 따라해 봐요! ✋';
   }
-}
-
-function setBar(pct) {
-  $confBar.style.width = `${pct}%`;
-  $confBarWrap?.setAttribute('aria-valuenow', pct);
 }
 
 /* =============================================
@@ -255,29 +227,7 @@ function setBar(pct) {
    ============================================= */
 function onSuccess() {
   stopPredicting();
-  showState('success');
   launchConfetti();
-}
-
-window.resetSession = function () {
-  consecOk = 0;
-  setBar(0);
-  stopConfetti();
-  if (stream) {
-    showState('trying');
-    startPredicting();
-  } else {
-    showState('idle');
-  }
-};
-
-/* =============================================
-   피드백 상태 전환
-   ============================================= */
-function showState(state) {
-  $fbIdle.hidden    = state !== 'idle';
-  $fbTrying.hidden  = state !== 'trying';
-  $fbSuccess.hidden = state !== 'success';
 }
 
 /* =============================================
