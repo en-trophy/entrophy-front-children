@@ -6,20 +6,24 @@
 :root {
   --font: 'Noto Sans KR', sans-serif;
 
-  --cream:   #FDF7F0;
+  --cream:   #FFF4DE;
   --white:   #FFFFFF;
-  --text:    #2B2B2B;
-  --text-md: #555555;
-  --text-lt: #999999;
-  --shadow:  rgba(0, 0, 0, 0.08);
-  --shadow-h: rgba(0, 0, 0, 0.16);
+  --text:    #49312F;
+  --text-md: #7D5C56;
+  --text-lt: #B1887E;
+  --hero-bg: #F8A9BA;
+  --hero-mint: #A9DCD1;
+  --hero-yellow: #FFE08C;
+  --coral: #D94B42;
+  --shadow:  rgba(154, 72, 78, 0.10);
+  --shadow-h: rgba(154, 72, 78, 0.18);
 
   /* word card gradients */
-  --grad-blue:   linear-gradient(145deg, #EAF5FF 0%, #BEE0FF 100%);
-  --grad-pink:   linear-gradient(145deg, #FFF0F8 0%, #FFD0EC 100%);
-  --grad-red:    linear-gradient(145deg, #FFF0F0 0%, #FFD0D0 100%);
-  --grad-green:  linear-gradient(145deg, #EFFFF0 0%, #C4F4C4 100%);
-  --grad-yellow: linear-gradient(145deg, #FFFDE8 0%, #FFE999 100%);
+  --grad-blue:   #BFDDE8;
+  --grad-pink:   #F8B3C4;
+  --grad-red:    #F6C1BB;
+  --grad-green:  #CDE9C8;
+  --grad-yellow: #FFE08C;
 
   /* learn page accent */
   --accent:  #7C5CFC;
@@ -36,6 +40,10 @@ html, body {
   overflow-x: hidden;
 }
 
+.home-page {
+  background: #F7A9BA;
+}
+
 /* =============================================
    배경 블롭 (홈 페이지)
    ============================================= */
@@ -48,12 +56,12 @@ html, body {
 }
 .blob-1 {
   width: 480px; height: 480px;
-  background: rgba(255, 180, 200, 0.25);
+  background: rgba(255, 224, 140, 0.28);
   top: -180px; left: -180px;
 }
 .blob-2 {
   width: 380px; height: 380px;
-  background: rgba(170, 210, 255, 0.25);
+  background: rgba(191, 221, 232, 0.32);
   bottom: -140px; right: -140px;
 }
 .blob-3 {
@@ -70,8 +78,16 @@ html, body {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 70px 24px 48px;
+  min-height: min(44vh, 430px);
+  padding: 54px 24px 38px;
   overflow: hidden;
+  background: var(--hero-bg);
+  border: 20px solid var(--cream);
+  border-top: 32px solid var(--hero-mint);
+  border-radius: 30px 30px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* floating emoji particles */
@@ -90,36 +106,72 @@ html, body {
   50%       { transform: translateY(-16px) rotate(12deg); }
 }
 
-.hero-content { position: relative; z-index: 1; }
-
-.hero-icon {
-  font-size: 5rem;
-  display: block;
-  margin-bottom: 18px;
-  animation: bounce-y 2.4s ease-in-out infinite;
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(1040px, 100%);
 }
+
 @keyframes bounce-y {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-14px); }
 }
 
 .hero-title {
-  font-size: clamp(2.2rem, 6vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0px, 1vw, 8px);
+  color: var(--hero-yellow);
+  font-size: clamp(4rem, 11vw, 8rem);
   font-weight: 900;
-  line-height: 1.15;
-  background: linear-gradient(90deg,
-    #FF6B6B 0%, #FF9A00 20%, #FFD040 38%,
-    #5CC85C 55%, #5BB8F5 72%, #A855F7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 14px;
+  line-height: 0.82;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: 0 8px 0 rgba(177, 82, 82, 0.18);
+  margin-bottom: 18px;
+}
+
+.hero-title span {
+  display: block;
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-md);
-  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 28px;
+  background: var(--hero-yellow);
+  color: var(--coral);
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  font-weight: 900;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 rgba(177, 82, 82, 0.18);
+}
+
+.hero-emoji {
+  z-index: 2;
+  width: clamp(62px, 8vw, 96px);
+  height: clamp(62px, 8vw, 96px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 247, 219, 0.95);
+  border: 4px solid var(--hero-yellow);
+  box-shadow: 0 12px 30px rgba(177, 82, 82, 0.18);
+  font-size: clamp(2.1rem, 4.2vw, 4rem);
+}
+
+.emoji-thanks,
+.emoji-love {
+  transform: translateY(-8px);
+}
+
+.emoji-star {
+  width: clamp(50px, 6vw, 72px);
+  height: clamp(50px, 6vw, 72px);
+  font-size: clamp(1.8rem, 3.6vw, 3.2rem);
 }
 
 /* =============================================
