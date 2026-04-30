@@ -180,72 +180,83 @@ html, body {
 .main-content {
   position: relative;
   z-index: 1;
-  max-width: 1020px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 8px 24px 72px;
+  padding: 28px 24px 72px;
+  background: var(--cream);
+  border-left: 20px solid #F7A9BA;
+  border-right: 20px solid #F7A9BA;
 }
 
 .section-header {
-  text-align: center;
-  margin-bottom: 36px;
+  text-align: left;
+  margin-bottom: 20px;
 }
 .section-header h2 {
-  font-size: 1.55rem;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 900;
   margin-bottom: 6px;
+  color: var(--coral);
+  font-style: italic;
 }
 .section-header p {
   font-size: 1rem;
-  color: var(--text-lt);
+  color: var(--text-md);
 }
 
-/* flex-wrap so the last 2 centre naturally */
 .words-grid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 22px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 14px;
+  margin: 0 -24px;
+  padding: 0 24px 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-color: var(--coral) rgba(217, 75, 66, 0.12);
+}
+.words-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.words-grid::-webkit-scrollbar-track {
+  background: rgba(217, 75, 66, 0.12);
+  border-radius: 999px;
+}
+.words-grid::-webkit-scrollbar-thumb {
+  background: var(--coral);
+  border-radius: 999px;
 }
 
 /* =============================================
    홈 — 단어 카드
    ============================================= */
 .word-card {
-  flex: 0 0 calc(33.33% - 22px);
-  min-width: 210px;
-  max-width: 290px;
+  flex: 0 0 252px;
+  min-width: 252px;
+  max-width: 252px;
   text-decoration: none;
   color: var(--text);
-  border-radius: 28px;
-  padding: 32px 20px 24px;
-  text-align: center;
+  border-radius: 18px;
+  padding: 0 0 14px;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 6px 24px var(--shadow);
+  align-items: stretch;
+  gap: 0;
+  background: #FFF8E9;
+  border: 2px solid rgba(217, 75, 66, 0.14);
+  box-shadow: 0 10px 22px var(--shadow);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  scroll-snap-align: start;
 
-  /* entrance animation */
-  opacity: 0;
-  animation: card-in 0.5s ease forwards;
-}
-.word-card:nth-child(1) { animation-delay: 0.10s; }
-.word-card:nth-child(2) { animation-delay: 0.18s; }
-.word-card:nth-child(3) { animation-delay: 0.26s; }
-.word-card:nth-child(4) { animation-delay: 0.34s; }
-.word-card:nth-child(5) { animation-delay: 0.42s; }
-
-@keyframes card-in {
-  from { opacity: 0; transform: translateY(28px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0)   scale(1); }
+  opacity: 1;
 }
 
 .word-card:hover {
-  transform: translateY(-10px) scale(1.03);
+  transform: translateY(-8px);
   box-shadow: 0 18px 48px var(--shadow-h);
 }
 .word-card:active {
@@ -260,9 +271,14 @@ html, body {
 .word-card[data-color="yellow"] { background: var(--grad-yellow); }
 
 .card-emoji {
-  font-size: 3.8rem;
+  height: 164px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border-radius: 16px 16px 0 0;
+  background: rgba(255, 248, 233, 0.44);
+  font-size: 4.5rem;
   line-height: 1;
-  margin-bottom: 8px;
   transition: transform 0.25s ease;
 }
 .word-card:hover .card-emoji {
@@ -270,30 +286,26 @@ html, body {
 }
 
 .word-kr {
-  font-size: 2rem;
+  padding: 14px 16px 4px;
+  font-size: 1.35rem;
   font-weight: 900;
-  color: #222;
-}
-.word-en {
-  font-size: 0.88rem;
-  color: var(--text-md);
-  margin-bottom: 14px;
+  color: var(--coral);
 }
 .card-btn {
-  display: inline-block;
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(4px);
-  border-radius: 50px;
-  padding: 8px 22px;
-  font-size: 0.82rem;
+  align-self: flex-start;
+  display: inline-flex;
+  margin: 8px 16px 0;
+  background: var(--coral);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #444;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: #FFF8E9;
+  box-shadow: none;
   transition: background 0.2s;
-  margin-top: 4px;
 }
 .word-card:hover .card-btn {
-  background: rgba(255,255,255,0.95);
+  background: #B93C36;
 }
 
 /* =============================================
@@ -583,14 +595,50 @@ html, body {
   .webcam-wrap { flex: unset; aspect-ratio: 4/3; }
 
   .word-card {
-    flex: 0 0 calc(50% - 11px);
-    min-width: 0;
-    max-width: none;
+    flex-basis: 220px;
+    min-width: 220px;
+    max-width: 220px;
   }
+  .card-emoji { height: 146px; }
 }
 
 @media (max-width: 480px) {
-  .word-card { flex: 0 0 100%; }
-  .hero { padding: 50px 16px 36px; }
-  .hero-icon { font-size: 3.8rem; }
+  .main-content {
+    padding-inline: 18px;
+    border-left-width: 10px;
+    border-right-width: 10px;
+  }
+  .words-grid {
+    margin-inline: -18px;
+    padding-inline: 18px;
+  }
+  .word-card {
+    flex-basis: 210px;
+    min-width: 210px;
+    max-width: 210px;
+  }
+  .hero {
+    min-height: 68vh;
+    padding: 64px 16px 46px;
+    border-top-width: 24px;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 20vw, 5.2rem);
+    margin-bottom: 24px;
+  }
+  .hero-subtitle {
+    min-height: 40px;
+    padding: 0 18px;
+  }
+  .hero-emoji {
+    width: 54px;
+    height: 54px;
+    border-width: 3px;
+    font-size: 2rem;
+  }
+  .emoji-star {
+    width: 46px;
+    height: 46px;
+    font-size: 1.6rem;
+  }
 }
