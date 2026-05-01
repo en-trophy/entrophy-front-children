@@ -568,6 +568,96 @@ html, body {
 
 
 /* =============================================
+   학습 페이지 — 점수 화면
+   ============================================= */
+.score-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 224, 140, 0.42), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(169, 220, 209, 0.48), transparent 30%),
+    rgba(73, 49, 47, 0.36);
+  backdrop-filter: blur(10px);
+}
+.score-overlay[hidden] {
+  display: none;
+}
+.score-card {
+  width: min(440px, 100%);
+  padding: 34px 26px 28px;
+  text-align: center;
+  border-radius: 26px;
+  background: #FFF8E9;
+  border: 5px solid var(--hero-yellow);
+  box-shadow: 0 26px 70px rgba(154, 72, 78, 0.24);
+  color: var(--text);
+  animation: score-pop 0.32s ease-out both;
+}
+@keyframes score-pop {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.score-emoji {
+  font-size: 4.5rem;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.score-label {
+  color: var(--coral);
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+.score-value {
+  margin: 6px 0 8px;
+  color: var(--coral);
+  font-size: clamp(4rem, 18vw, 6.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.score-message {
+  color: var(--text-md);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.score-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+.score-btn {
+  min-width: 118px;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.score-btn:hover {
+  transform: translateY(-2px);
+}
+.score-btn.retry {
+  background: var(--coral);
+  color: #FFF8E9;
+  box-shadow: 0 4px 0 #B93C36;
+}
+.score-btn.menu {
+  background: var(--hero-mint);
+  color: #2F5D58;
+  box-shadow: 0 4px 0 #82BFB4;
+}
+
+
+/* =============================================
    축하 confetti 캔버스
    ============================================= */
 #confetti-canvas {

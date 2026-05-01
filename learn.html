@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>수어 배우기 🤟</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -67,6 +67,19 @@
 
   </main>
 
-  <script src="js/learn.js"></script>
+  <section class="score-overlay" id="score-overlay" hidden aria-live="polite">
+    <div class="score-card">
+      <div class="score-emoji" id="score-emoji" aria-hidden="true">🎉</div>
+      <p class="score-label">참 잘했어요!</p>
+      <div class="score-value"><span id="score-value">100</span>점</div>
+      <p class="score-message" id="score-message">멋진 손짓이에요!</p>
+      <div class="score-actions">
+        <button class="score-btn retry" id="retry-btn" type="button">다시 시도</button>
+        <a class="score-btn menu" href="index.html">메뉴로</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/learn.js?v=6"></script>
 </body>
 </html>

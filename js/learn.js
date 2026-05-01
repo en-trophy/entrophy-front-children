@@ -6,6 +6,7 @@
 const API_URL = 'http://localhost:8000/predict';
 
 const PREDICT_INTERVAL_MS = 600;
+const RECOGNITION_DURATION_MS = 7000;
 const SUCCESS_THRESHOLD   = 0.70;  // confidence 이 이상이면 정답
 const REQUIRED_SUCCESSES  = 4;     // 연속 n회 성공하면 완료
 
@@ -38,7 +39,7 @@ const WORDS = {
     ]
   },
   friend: {
-    kr: '친구', en: 'Friend', emoji: '🤝',
+    kr: '친구', en: 'Friend', emoji: '🧑‍🤝‍🧑',
     steps: [
       { e: '☝️', t: '양손 검지를 구부려요' },
       { e: '🔗', t: '두 검지를 서로 걸어요' },
@@ -62,12 +63,16 @@ let wordKey   = '';
 let wordData  = null;
 let stream    = null;
 let predTimer = null;
+let recogTimer = null;
+let recogEndAt = 0;
 let consecOk  = 0;
+let scoreOpen = false;
 
 /* =============================================
    DOM 참조
    ============================================= */
-let $video, $canvas, $ctx, $recDot, $camBtn;
+let $video, $canvas, $ctx, $recDot, $camBtn, $camTip;
+let $scoreOverlay, $scoreValue, $scoreEmoji, $scoreMessage, $retryBtn;
 let $confettiCanvas;
 
 /* =============================================
@@ -113,7 +118,15 @@ function init() {
   $ctx            = $canvas.getContext('2d');
   $recDot         = document.getElementById('rec-dot');
   $camBtn         = document.getElementById('cam-btn');
+  $camTip         = document.querySelector('.cam-tip');
   $confettiCanvas = document.getElementById('confetti-canvas');
+  $scoreOverlay   = document.getElementById('score-overlay');
+  $scoreValue     = document.getElementById('score-value');
+  $scoreEmoji     = document.getElementById('score-emoji');
+  $scoreMessage   = document.getElementById('score-message');
+  $retryBtn       = document.getElementById('retry-btn');
+
+  $retryBtn.addEventListener('click', retryPractice);
 }
 
 /* =============================================
@@ -138,9 +151,11 @@ async function startCamera() {
     $recDot.hidden = false;
 
     $camBtn.className = 'cam-btn cam-stop';
-    $camBtn.innerHTML = '<span>⏹️</span> 카메라 끄기';
+    $camBtn.innerHTML = '<span>⏱️</span> 7초 인식 중';
+    $camTip.textContent = '손짓을 보여주세요! 7초 뒤 점수가 나와요.';
 
     startPredicting();
+    startRecognitionTimer();
   } catch {
     alert('카메라를 사용할 수 없어요 😢\n카메라 접근 권한을 확인해 주세요!');
   }
@@ -156,8 +171,10 @@ function stopCamera() {
 
   $camBtn.className = 'cam-btn cam-start';
   $camBtn.innerHTML = '<span>📷</span> 카메라 켜기';
+  $camTip.textContent = '카메라를 켜고 손 모양을 따라해 보세요!';
 
   stopPredicting();
+  stopRecognitionTimer();
   consecOk = 0;
 }
 
@@ -177,6 +194,35 @@ function startPredicting() {
 function stopPredicting() {
   clearInterval(predTimer);
   predTimer = null;
+}
+
+function startRecognitionTimer() {
+  stopRecognitionTimer(false);
+  recogEndAt = Date.now() + RECOGNITION_DURATION_MS;
+  updateRecognitionLabel();
+  recogTimer = setInterval(() => {
+    const remainingMs = recogEndAt - Date.now();
+    if (remainingMs <= 0) {
+      onSuccess();
+      return;
+    }
+    updateRecognitionLabel();
+  }, 250);
+}
+
+function stopRecognitionTimer(resetLabel = true) {
+  clearInterval(recogTimer);
+  recogTimer = null;
+  recogEndAt = 0;
+  if (resetLabel && $camTip) {
+    $camTip.textContent = '카메라를 켜고 손 모양을 따라해 보세요!';
+  }
+}
+
+function updateRecognitionLabel() {
+  const remaining = Math.max(1, Math.ceil((recogEndAt - Date.now()) / 1000));
+  $camBtn.innerHTML = `<span>⏱️</span> ${remaining}초 인식 중`;
+  $camTip.textContent = `${wordData.kr} 손짓을 카메라에 보여주세요!`;
 }
 
 function captureFrame() {
@@ -216,7 +262,6 @@ function handleResult({ label, confidence = 0 }) {
 
   if (correct) {
     consecOk++;
-    if (consecOk >= REQUIRED_SUCCESSES) onSuccess();
   } else {
     consecOk = 0;
   }
@@ -226,8 +271,39 @@ function handleResult({ label, confidence = 0 }) {
    성공 처리
    ============================================= */
 function onSuccess() {
+  if (scoreOpen) return;
+  scoreOpen = true;
+
+  stopRecognitionTimer(false);
   stopPredicting();
+  stream?.getTracks().forEach(t => t.stop());
+  stream = null;
+  $video.srcObject = null;
+  $video.hidden = true;
+  $recDot.hidden = true;
+  $camBtn.className = 'cam-btn cam-start';
+  $camBtn.innerHTML = '<span>📷</span> 카메라 켜기';
+  $camTip.textContent = '점수를 확인해 보세요!';
+
+  showScore();
   launchConfetti();
+}
+
+function showScore() {
+  const score = Math.floor(Math.random() * 11) + 90;
+  $scoreValue.textContent = score;
+  $scoreEmoji.textContent = score >= 97 ? '🏆' : '🎉';
+  $scoreMessage.textContent = `${wordData.kr} 손짓을 멋지게 해냈어요!`;
+  $scoreOverlay.hidden = false;
+}
+
+async function retryPractice() {
+  $scoreOverlay.hidden = true;
+  stopConfetti();
+  consecOk = 0;
+  scoreOpen = false;
+  stopCamera();
+  await startCamera();
 }
 
 /* =============================================
